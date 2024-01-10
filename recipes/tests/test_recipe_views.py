@@ -101,3 +101,17 @@ class RecipeViewsTest(RecipeTestBase):
         response = self.client.get(reverse('recipes:details', kwargs={'id': recipe.id}))
         self.assertEqual(response.status_code, 404)
 
+
+    def test_recipe_search_load_correct_view_function(self):
+        url = resolve(reverse('recipes:search'))
+        self.assertIs(url.func, views.search)
+
+    
+    def test_recipe_search_load_correct_template(self):
+        response = self.client.get(reverse('recipes:search') + '?search=test')
+        self.assertTemplateUsed(response, 'recipes/pages/search.html')
+
+
+    def test_recipe_search_raises_404_if_no_search_term(self):
+        response = self.client.get(reverse('recipes:search')) 
+        self.assertEqual(response.status_code, 404)
