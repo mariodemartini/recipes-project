@@ -1,13 +1,19 @@
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import render, get_list_or_404, get_object_or_404
+from django.core.paginator import Paginator
+from utils.pagination import make_pagination
 from recipes.models import Recipe
+
 
 # Create your views here.
 def home(request):
     recipes = Recipe.objects.filter(is_published=True).order_by('-id')
+    page_object, pagination_range = make_pagination(request, recipes, 9)
+
     return render(request, 'recipes/pages/home.html', context={
-        'recipes': recipes,
+        'recipes': page_object,
+        'pagination_range': pagination_range,
     })
 
 
@@ -18,9 +24,11 @@ def category(request, category_id):
             is_published=True,
         ).order_by('-id')
     )
+    page_object, pagination_range = make_pagination(request, recipes, 9)
     
     return render(request, 'recipes/pages/category.html', context={
-        'recipes': recipes,
+        'recipes': page_object,
+        'pagination_range': pagination_range,
         'title': f'Categoria - {recipes[0].category.name} | ',
     })
 
@@ -47,10 +55,12 @@ def search(request):
         ),
         is_published=True,        
     ).order_by('-id')
-
+    page_object, pagination_range = make_pagination(request, recipes, 9)
 
     return render(request, 'recipes/pages/search.html', {
         'page_title': f'"{search_term}" |',
         'search_term': search_term,
-        'recipes': recipes,
+        'recipes': page_object,
+        'pagination_range': pagination_range,
+        'additional_url_query': f'&search={search_term}',
     })
