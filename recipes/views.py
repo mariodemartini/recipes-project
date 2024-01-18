@@ -5,13 +5,19 @@ from django.core.paginator import Paginator
 from utils.pagination import make_pagination
 from recipes.models import Recipe
 import os
+# from django.contrib import messages
 
 PER_PAGE = os.environ.get('PER_PAGE', 6)
 
 
 # Create your views here.
 def home(request):
+    # messages.error(request, 'You are searching for something! It was wrong!')
+    # messages.success(request, 'You are searching for something! It worked out!')
+    # messages.info(request, 'You are searching for something! For the record')
+
     recipes = Recipe.objects.filter(is_published=True).order_by('-id')
+
     page_object, pagination_range = make_pagination(request, recipes, PER_PAGE)
 
     return render(request, 'recipes/pages/home.html', context={
