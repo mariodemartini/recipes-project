@@ -35,6 +35,19 @@ class RegisterForm(forms.ModelForm):
         add_placeholder(self.fields['password'], 'Digite sua senha')
         add_placeholder(self.fields['confirm'], 'Repita sua senha')
 
+    username = forms.CharField(
+        label='Usuário',
+        help_text=(
+            'Obrigatório. 150 caracteres ou menos. '
+            'Letras, números e @/./+/-/_ apenas.'
+        ),
+        error_messages={
+            'required': 'Este campo é obrigatório.',
+            'min_length': 'Usuário deve ter mínimo de 4 caracteres',
+            'max_length': 'Usuário deve ter máximo de 150 caracteres',
+        },
+        min_length=4, max_length=150,
+    )
     first_name = forms.CharField(
         error_messages={'required': 'Digite seu nome'},
         label='Nome'
@@ -45,7 +58,7 @@ class RegisterForm(forms.ModelForm):
     )
     email = forms.EmailField(
         error_messages={'required': 'Email obrigatório'},
-        label='E-mail',
+        label='Email',
         help_text='Digite um email válido.',
     )
     password = forms.CharField(
@@ -112,6 +125,17 @@ class RegisterForm(forms.ModelForm):
     #             params={'value': '"atenção"'}
     #         )
     #     return data
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '')
+        exists = User.objects.filter(email=email).exists()
+
+        if exists:
+            raise ValidationError(
+                'Esse email já existe!', code='invalid',
+            )
+
+        return email
 
 
     def clean(self):
