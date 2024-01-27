@@ -35,6 +35,19 @@ class RegisterForm(forms.ModelForm):
         add_placeholder(self.fields['password'], 'Digite sua senha')
         add_placeholder(self.fields['confirm'], 'Repita sua senha')
 
+    first_name = forms.CharField(
+        error_messages={'required': 'Digite seu nome'},
+        label='Nome'
+    )
+    last_name = forms.CharField(
+        error_messages={'required': 'Digite seu sobrenome'},
+        label='Sobrenome'
+    )
+    email = forms.EmailField(
+        error_messages={'required': 'Email obrigatório'},
+        label='E-mail',
+        help_text='Digite um email válido.',
+    )
     password = forms.CharField(
         required=True,
         label='Senha',
@@ -105,16 +118,16 @@ class RegisterForm(forms.ModelForm):
         cleaned_data = super().clean()
 
         password = cleaned_data.get('password')
-        password2 = cleaned_data.get('repeat')
+        confirm = cleaned_data.get('confirm')
 
-        if password != password2:
+        if password != confirm:
             password_confirmation_error = ValidationError(
                 'As senhas não conferem. Digite novamente!',
                 code='invalid'
             )
             raise ValidationError({
                 'password': password_confirmation_error,
-                'repeat': [
+                'confirm': [
                     password_confirmation_error,
                 ],
             })
