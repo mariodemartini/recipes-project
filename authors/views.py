@@ -33,9 +33,7 @@ def register_create(request):
         del(request.session['register_form_data'])
 
     return redirect('authors:register')
-    # return render(request, 'authors/pages/register_view.html', {
-    #     'form': form,
-    # })
+
 
 def login_view(request):
     form = LoginForm()
