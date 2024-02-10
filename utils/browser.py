@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from time import sleep
 
@@ -15,6 +16,9 @@ def make_chrome_browser(*options):
     # Adiciona argumentos opcionais
     for option in options:
         chrome_options.add_argument(option)
+
+    if os.environ.get('SELENIUM_HEADLESS') == '1':
+        chrome_options.add_argument('--headless')
 
     try:
         chrome_service = Service(executable_path=CHROMEDRIVER_PATH)
@@ -35,3 +39,4 @@ if __name__ == '__main__':
             sleep(5)
         finally:
             browser.quit()
+
