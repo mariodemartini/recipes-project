@@ -45,3 +45,27 @@ class AuthorsLoginTest(AuthorsBaseTest):
             'Not Found',
             self.browser.find_element(By.TAG_NAME, 'body').text
         )
+
+    def test_form_login_invalid_credentials(self):
+        # User open login page
+        self.browser.get(
+            self.live_server_url + reverse('authors:login')
+        )
+
+        # User see form page
+        form = self.browser.find_element(By.CLASS_NAME, 'main-form')
+
+        # Send wrong datas
+        username = self.get_by_placeholder(form, 'Usuário')
+        password = self.get_by_placeholder(form, 'Senha')
+        username.send_keys('invalid_user')
+        password.send_keys('invalid_password')
+
+        # Envia o formulário
+        form.submit()
+
+        # Vê uma mensagem de erro na tela
+        self.assertIn(
+            'Invalid credentials',
+            self.browser.find_element(By.TAG_NAME, 'body').text
+        )
