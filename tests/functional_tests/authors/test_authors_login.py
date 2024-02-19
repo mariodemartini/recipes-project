@@ -14,23 +14,23 @@ class AuthorsLoginTest(AuthorsBaseTest):
             username='my_user', password=string_password
         )
 
-        # Usuário abre a página de login
+        # User open login page
         self.browser.get(self.live_server_url + reverse('authors:login'))
 
-        # Usuário vê o formulário de login
+        # User see form page
         form = self.browser.find_element(By.CLASS_NAME, 'main-form')
-        username_field = self.get_by_placeholder(form, 'Type your username')
-        password_field = self.get_by_placeholder(form, 'Type your password')
+        username_field = self.get_by_placeholder(form, 'Usuário')
+        password_field = self.get_by_placeholder(form, 'Senha')
 
-        # Usuário digita seu usuário e senha
+        # User write username and password
         username_field.send_keys(user.username)
         password_field.send_keys(string_password)
 
-        # Usuário envia o formulário
+        # User submit form
         form.submit()
 
-        # Usuário vê a mensagem de login com sucesso e seu nome
+        # User see login success message with username
         self.assertIn(
-            f'Your are logged in with {user.username}.',
+            f'Você está logado como {user.username}.',
             self.browser.find_element(By.TAG_NAME, 'body').text
         )
