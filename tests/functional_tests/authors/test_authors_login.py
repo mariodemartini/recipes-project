@@ -55,16 +55,40 @@ class AuthorsLoginTest(AuthorsBaseTest):
         # User see form page
         form = self.browser.find_element(By.CLASS_NAME, 'main-form')
 
-        # Send wrong datas
+        # Send invalid datas
         username = self.get_by_placeholder(form, 'Usuário')
         password = self.get_by_placeholder(form, 'Senha')
         username.send_keys('invalid_user')
         password.send_keys('invalid_password')
 
-        # Envia o formulário
+        # Send form
         form.submit()
 
-        # Vê uma mensagem de erro na tela
+        # User see error message
+        self.assertIn(
+            'Usuário e/ou senha inválidos',
+            self.browser.find_element(By.TAG_NAME, 'body').text
+        )
+
+    def test_form_login_empty(self):
+        # User open login page
+        self.browser.get(
+            self.live_server_url + reverse('authors:login')
+        )
+
+        # User see form page
+        form = self.browser.find_element(By.CLASS_NAME, 'main-form')
+
+        # Empty fields
+        username = self.get_by_placeholder(form, 'Usuário')
+        password = self.get_by_placeholder(form, 'Senha')
+        username.send_keys(' ')
+        password.send_keys(' ')
+
+        # Send form
+        form.submit()
+
+        # User see error message
         self.assertIn(
             'Usuário e/ou senha inválidos',
             self.browser.find_element(By.TAG_NAME, 'body').text
