@@ -138,7 +138,7 @@ class AuthorsLoginTest(AuthorsBaseTest):
         )
 
         self.assertIn(
-            'Logged out successfully',
+            'Deslogado com sucesso.',
             response.content.decode('utf-8')
         )
 
